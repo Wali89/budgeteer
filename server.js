@@ -3,20 +3,30 @@ var { graphql, buildSchema } = require('graphql');
 // Construct a schema, using GraphQL schema language
 var schema = buildSchema(`
   type Query {
-    hello: String
-    bye: String
+    allPersons(last: Int): [Person!]!
+  }
+
+  type Mutation {
+    createPerson(name: String!, age: Int!): Person!
+  }
+
+  type Subscription {
+    newPerson: Person!
+  }
+
+  type Person {
+    name: String!
+    age: Int!
+    posts: [Post!]!
+  }
+
+  type Post {
+    title: String!
+    author: Person!
   }
 `);
 
-// The root provides a resolver function for each API endpoint
-var root = {
-  hello: () => {
-    return 'Hello world!';
-  },
-  bye: () => {
-    return 'Bye world!';
-  },
-};
+
 
 // Run the GraphQL query '{ hello }' and print out the response
 graphql(schema, '{ bye }', root).then((response) => {
